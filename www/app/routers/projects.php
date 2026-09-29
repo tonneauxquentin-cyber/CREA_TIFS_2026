@@ -1,0 +1,14 @@
+<?php 
+
+use \App\Controllers\ProjectsController;
+
+include_once '../app/controllers/projectsController.php';
+
+switch ($_GET['projects']):
+    case 'show':
+        ProjectsController\showAction($conn, $_GET['id']);
+        break;
+    default:
+        ProjectsController\indexAction($conn);
+        break;
+endswitch;
