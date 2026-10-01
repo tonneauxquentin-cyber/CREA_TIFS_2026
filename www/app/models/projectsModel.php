@@ -31,3 +31,22 @@ function findOneById(PDO $conn, int $id): array|false{
     $rs->execute();
     return $rs->fetch(PDO::FETCH_ASSOC);
 }
+
+// Supprime un projet et ses tags associés
+function delete(PDO $conn, int $id): bool{
+    // 1. On supprime d'abord les liaisons dans la table pivot
+    $rs = $conn->prepare(
+        "DELETE
+        FROM projets_has_tags
+        WHERE projet = :id;");
+    $rs->bindValue(':id', $id, PDO::PARAM_INT);
+    $rs->execute();
+
+    // 2. On peut maintenant supprimer le projet
+    $rs = $conn->prepare(
+        "DELETE
+        FROM projets
+        WHERE id = :id;");
+    $rs->bindValue(':id', $id, PDO::PARAM_INT);
+    return $rs->execute();
+}

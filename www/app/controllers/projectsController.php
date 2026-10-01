@@ -41,3 +41,10 @@ function showAction(PDO $conn, int $id){
     include '../app/views/projects/show.php';
     $content = ob_get_clean();
 }
+// Supprime un projet puis redirige vers l'accueil
+function deleteAction(PDO $conn, int $id){
+    include_once '../app/models/projectsModel.php';
+    ProjectsModel\delete($conn, $id);
+    header('Location: ' . PUBLIC_BASE_URL);
+    exit;
+}

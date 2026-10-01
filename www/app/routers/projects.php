@@ -8,6 +8,9 @@ switch ($_GET['projects']):
     case 'show':
         ProjectsController\showAction($conn, $_GET['id']);
         break;
+    case 'delete':
+        ProjectsController\deleteAction($conn, $_GET['id']);
+        break;
     default:
         ProjectsController\indexAction($conn);
         break;

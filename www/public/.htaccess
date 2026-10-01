@@ -13,6 +13,12 @@ RewriteRule ^ - [L]
 # PATTERN: /projects/id/slug DANS LE HREF
 # URL: ?projects=show&id=x DANS LE ROUTER
 RewriteRule ^projects\/([1-9][0-9]*)\/[a-z0-9]([a-z0-9\-]*[a-z0-9])*\.html$ index.php?projects=show&id=$1 [L]
+
+# ROUTE PROJECTS.DELETE
+# PATTERN: /projects/delete/id/slug.html DANS LE HREF
+# URL: ?projects=delete&id=x DANS LE ROUTER
+RewriteRule ^projects\/delete\/([1-9][0-9]*)\/[a-z0-9]([a-z0-9\-]*[a-z0-9])*\.html$ index.php?projects=delete&id=$1 [L]
+
  
 # --------------------------------------------
 # FALLBACK
