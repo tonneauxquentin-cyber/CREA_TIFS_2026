@@ -11,6 +11,14 @@ switch ($_GET['projects']):
     case 'delete':
         ProjectsController\deleteAction($conn, $_GET['id']);
         break;
+    case 'add':
+        if (isset($_GET['form'])) {
+            ProjectsController\addFormAction($conn);
+        }
+        elseif (isset($_GET['insert'])) {
+            ProjectsController\insertAction($conn);
+        }
+        break;
     default:
         ProjectsController\indexAction($conn);
         break;

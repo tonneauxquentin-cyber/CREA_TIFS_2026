@@ -15,7 +15,6 @@ function findAll(PDO $conn, int $limit = 10, int $offset = 0): array{
     $rs->execute();
     return $rs->fetchAll(PDO::FETCH_ASSOC);
 }
-
 // Nombre total de projets (pour calculer le nombre de pages)
 function countAll(PDO $conn): int{
     return (int) $conn->query("SELECT COUNT(*) FROM projets;")->fetchColumn();
@@ -31,7 +30,6 @@ function findOneById(PDO $conn, int $id): array|false{
     $rs->execute();
     return $rs->fetch(PDO::FETCH_ASSOC);
 }
-
 // Supprime un projet et ses tags associés
 function delete(PDO $conn, int $id): bool{
     // 1. On supprime d'abord les liaisons dans la table pivot
@@ -49,4 +47,27 @@ function delete(PDO $conn, int $id): bool{
         WHERE id = :id;");
     $rs->bindValue(':id', $id, PDO::PARAM_INT);
     return $rs->execute();
+}
+// Insère un nouveau projet et renvoie son id
+function insert(PDO $conn, string $titre, string $texte, string $image, int $creatif): int{
+    $sql = "INSERT INTO projets (titre, texte, dateCreation, image, creatif)
+            VALUES (:titre, :texte, NOW(), :image, :creatif);";
+    $rs = $conn->prepare($sql);
+    $rs->bindValue(':titre', $titre);
+    $rs->bindValue(':texte', $texte);
+    $rs->bindValue(':image', $image);
+    $rs->bindValue(':creatif', $creatif, PDO::PARAM_INT);
+    $rs->execute();
+    return (int) $conn->lastInsertId();
+}
+
+// Associe une liste de tags à un projet
+function addTags(PDO $conn, int $projetId, array $tagIds): void{
+    $sql = "INSERT INTO projets_has_tags (projet, tag) VALUES (:projet, :tag);";
+    $rs = $conn->prepare($sql);
+    foreach ($tagIds as $tagId) {
+        $rs->bindValue(':projet', $projetId, PDO::PARAM_INT);
+        $rs->bindValue(':tag', (int) $tagId, PDO::PARAM_INT);
+        $rs->execute();
+    }
 }

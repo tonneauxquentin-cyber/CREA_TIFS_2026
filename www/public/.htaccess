@@ -19,6 +19,17 @@ RewriteRule ^projects\/([1-9][0-9]*)\/[a-z0-9]([a-z0-9\-]*[a-z0-9])*\.html$ inde
 # URL: ?projects=delete&id=x DANS LE ROUTER
 RewriteRule ^projects\/delete\/([1-9][0-9]*)\/[a-z0-9]([a-z0-9\-]*[a-z0-9])*\.html$ index.php?projects=delete&id=$1 [L]
 
+# ROUTE PROJECTS.ADD.FORM
+# PATTERN: /projects/add/form.html DANS LE HREF
+# URL: ?projects=add&form=1 DANS LE ROUTER
+RewriteRule ^projects\/add\/form\.html$ index.php?projects=add&form=1 [L]
+
+# ROUTE PROJECTS.ADD.INSERT
+# PATTERN: /projects/add/insert.html DANS LE FORM ACTION
+# URL: ?projects=add&insert=1 DANS LE ROUTER
+RewriteRule ^projects\/add\/insert\.html$ index.php?projects=add&insert=1 [L]
+
+
  
 # --------------------------------------------
 # FALLBACK

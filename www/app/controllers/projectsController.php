@@ -5,6 +5,7 @@ namespace App\Controllers\ProjectsController;
 use \PDO;
 use \App\Models\ProjectsModel;
 use \App\Models\TagsModel;
+use \App\Models\CreatifsModel;
 
 //Prépare la vue index
 function indexAction(PDO $conn, int $page = 1){
@@ -45,6 +46,69 @@ function showAction(PDO $conn, int $id){
 function deleteAction(PDO $conn, int $id){
     include_once '../app/models/projectsModel.php';
     ProjectsModel\delete($conn, $id);
+    header('Location: ' . PUBLIC_BASE_URL);
+    exit;
+}
+// Affiche le formulaire d'ajout d'un projet
+function addFormAction(PDO $conn){
+    include_once '../app/models/creatifsModel.php';
+    include_once '../app/models/tagsModel.php';
+
+    $creatifs = CreatifsModel\findAll($conn);
+    $tags = TagsModel\findAll($conn);
+
+    global $title, $content;
+    $title = "Nouveau projet - CREA'TIFS";
+    ob_start();
+    include '../app/views/projects/form.php';
+    $content = ob_get_clean();
+}
+// Traite le formulaire d'ajout, enregistre le projet, puis redirige vers l'accueil
+function insertAction(PDO $conn){
+    include_once '../app/models/projectsModel.php';
+    include_once '../app/models/creatifsModel.php';
+    include_once '../app/models/tagsModel.php';
+    $titre = trim($_POST['title'] ?? '');
+    $texte = trim($_POST['text'] ?? '');
+    $creatifId = (int) ($_POST['category_id'] ?? 0);
+    $tagIds = $_POST['tags'] ?? [];
+    // Validation des champs obligatoires
+    $errors = [];
+    if ($titre === '') {
+        $errors[] = "Le titre est obligatoire.";
+    } elseif (strlen($titre) > 45) {
+        $errors[] = "Le titre ne doit pas dépasser 45 caractères.";
+    }
+    if ($texte === '') {
+        $errors[] = "La description est obligatoire.";
+    }
+    if ($creatifId <= 0) {
+        $errors[] = "Vous devez sélectionner un créa'tif.";
+    }
+    // En cas d'erreur : on réaffiche le formulaire avec les valeurs saisies
+    if (!empty($errors)) {
+        $creatifs = CreatifsModel\findAll($conn);
+        $tags = TagsModel\findAll($conn);
+        global $title, $content;
+        $title = "Nouveau projet - CREA'TIFS";
+        $formTitle = "Ajouter un projet";
+        $old = $_POST; // pour pré-remplir les champs
+        ob_start();
+        include '../app/views/projects/form.php';
+        $content = ob_get_clean();
+        return;
+    }
+    // Gestion de l'image envoyée (optionnelle)
+    $image = '';
+    if (!empty($_FILES['image']['name'])) {
+        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $image = uniqid() . '.' . $extension;
+        move_uploaded_file($_FILES['image']['tmp_name'], '../public/assets/images/' . $image);
+    }
+    $projetId = ProjectsModel\insert($conn, $titre, $texte, $image, $creatifId);
+    if (!empty($tagIds)) {
+        ProjectsModel\addTags($conn, $projetId, $tagIds);
+    }
     header('Location: ' . PUBLIC_BASE_URL);
     exit;
 }
