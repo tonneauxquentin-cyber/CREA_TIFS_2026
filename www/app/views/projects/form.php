@@ -19,7 +19,7 @@ $errors = $errors ?? [];
     </div>
 <?php endif; ?>
 
-<form action="<?= PUBLIC_BASE_URL ?>projects/add/insert.html" method="post" enctype="multipart/form-data" class="ct-form-card">
+<form action="<?= $formAction ?? PUBLIC_BASE_URL . 'projects/add/insert.html' ?>" method="post" enctype="multipart/form-data" class="ct-form-card">
     <label for="title">Titre du projet</label>
     <input
         type="text"

@@ -7,7 +7,7 @@ function findAll(PDO $conn, int $limit = 10, int $offset = 0): array{
     $sql = "SELECT p.*, c.pseudo AS creatif_pseudo
             FROM projets p
             JOIN creatifs c ON p.creatif = c.id
-            ORDER BY titre DESC
+            ORDER BY dateCreation DESC, id DESC
             LIMIT :limit OFFSET :offset;";
     $rs = $conn->prepare($sql);
     $rs->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -70,4 +70,22 @@ function addTags(PDO $conn, int $projetId, array $tagIds): void{
         $rs->bindValue(':tag', (int) $tagId, PDO::PARAM_INT);
         $rs->execute();
     }
+}
+// Met à jour un projet existant
+function update(PDO $conn, int $id, string $titre, string $texte, string $image, int $creatif): bool{
+    // Si aucune nouvelle image n'est envoyée, on ne touche pas à l'image existante
+    if ($image === '') {
+        $sql = "UPDATE projets SET titre = :titre, texte = :texte, creatif = :creatif WHERE id = :id;";
+    } else {
+        $sql = "UPDATE projets SET titre = :titre, texte = :texte, image = :image, creatif = :creatif WHERE id = :id;";
+    }
+    $rs = $conn->prepare($sql);
+    $rs->bindValue(':titre', $titre);
+    $rs->bindValue(':texte', $texte);
+    $rs->bindValue(':creatif', $creatif, PDO::PARAM_INT);
+    $rs->bindValue(':id', $id, PDO::PARAM_INT);
+    if ($image !== '') {
+        $rs->bindValue(':image', $image);
+    }
+    return $rs->execute();
 }

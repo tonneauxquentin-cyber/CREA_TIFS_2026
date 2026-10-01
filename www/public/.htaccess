@@ -29,7 +29,15 @@ RewriteRule ^projects\/add\/form\.html$ index.php?projects=add&form=1 [L]
 # URL: ?projects=add&insert=1 DANS LE ROUTER
 RewriteRule ^projects\/add\/insert\.html$ index.php?projects=add&insert=1 [L]
 
+# ROUTE PROJECTS.EDIT.FORM
+# PATTERN: /projects/id/slug/edit/form.html DANS LE HREF
+# URL: ?projects=edit&form=1&id=x DANS LE ROUTER
+RewriteRule ^projects\/([1-9][0-9]*)\/[a-z0-9]([a-z0-9\-]*[a-z0-9])*\/edit\/form\.html$ index.php?projects=edit&form=1&id=$1 [L]
 
+# ROUTE PROJECTS.EDIT.UPDATE
+# PATTERN: /projects/id/slug/edit/update.html DANS LE FORM ACTION
+# URL: ?projects=edit&update=1&id=x DANS LE ROUTER
+RewriteRule ^projects\/([1-9][0-9]*)\/[a-z0-9]([a-z0-9\-]*[a-z0-9])*\/edit\/update\.html$ index.php?projects=edit&update=1&id=$1 [L]
  
 # --------------------------------------------
 # FALLBACK

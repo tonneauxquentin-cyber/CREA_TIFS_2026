@@ -14,7 +14,6 @@ function findAllByProjectId(PDO $conn, int $id): array{
     $rs->execute();
     return $rs->fetchAll(PDO::FETCH_ASSOC);
 }
-
 // Tous les tags
 function findAll(PDO $conn): array{
     $sql = "SELECT *
@@ -23,4 +22,17 @@ function findAll(PDO $conn): array{
     $rs = $conn->prepare($sql);
     $rs->execute();
     return $rs->fetchAll(PDO::FETCH_ASSOC);
+}
+// Remplace tous les tags d'un projet
+function replaceTags(PDO $conn, int $projetId, array $tagIds): void{
+    // On repart de zéro pour éviter les doublons ou les tags à retirer
+    $rs = $conn->prepare("DELETE FROM projets_has_tags WHERE projet = :id;");
+    $rs->bindValue(':id', $projetId, PDO::PARAM_INT);
+    $rs->execute();
+    $rs = $conn->prepare("INSERT INTO projets_has_tags (projet, tag) VALUES (:projet, :tag);");
+    foreach ($tagIds as $tagId) {
+        $rs->bindValue(':projet', $projetId, PDO::PARAM_INT);
+        $rs->bindValue(':tag', (int) $tagId, PDO::PARAM_INT);
+        $rs->execute();
+    }
 }

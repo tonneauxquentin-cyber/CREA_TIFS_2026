@@ -10,7 +10,7 @@ use Core\Helpers;
 
           <div class="mb-4">
             <!-- routes: /projets/id/slug/edit/form.html — /projets/delete/id/slug.html -->
-            <a href="<?= PUBLIC_BASE_URL ?>form.html" class="ct-btn ct-btn--primary">Éditer le projet</a>
+            <a href="<?= PUBLIC_BASE_URL ?>projects/<?= $projet['id'] ?>/<?php echo Helpers\slugify($projet['titre']); ?>/edit/form.html" class="ct-btn ct-btn--primary">Éditer le projet</a>
             <a href="<?= PUBLIC_BASE_URL ?>projects/delete/<?php echo $projet['id']; ?>/<?php echo Helpers\slugify($projet['titre']); ?>.html" class="ct-btn ct-btn--danger" onclick="return confirm('Supprimer définitivement ce projet ?');">Supprimer le projet</a>
           </div>
 

@@ -19,6 +19,14 @@ switch ($_GET['projects']):
             ProjectsController\insertAction($conn);
         }
         break;
+    case 'edit':
+        if (isset($_GET['form'])) {
+            ProjectsController\editFormAction($conn, $_GET['id']);
+        }
+        elseif (isset($_GET['update'])) {
+            ProjectsController\updateAction($conn, $_GET['id']);
+        }
+    break;
     default:
         ProjectsController\indexAction($conn);
         break;

@@ -1,6 +1,4 @@
 <?php
-
-
 //ROUTE PROJECTS
 //PATTERN: /projects/...
 //URL:?projects=...
